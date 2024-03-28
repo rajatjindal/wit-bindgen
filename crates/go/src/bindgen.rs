@@ -3,7 +3,7 @@ use std::fmt::Write as _;
 use heck::{ToSnakeCase, ToUpperCamelCase};
 use wit_bindgen_c::{flags_repr, int_repr};
 use wit_bindgen_core::wit_parser::Handle::{Borrow, Own};
-use wit_bindgen_core::wit_parser::{Field, Function, Handle, Type, TypeDefKind};
+use wit_bindgen_core::wit_parser::{Function, Handle, Type, TypeDefKind};
 use wit_bindgen_core::{dealias, uwriteln, Direction, Source};
 
 use super::avoid_keyword;
@@ -197,17 +197,16 @@ impl<'a, 'b> FunctionBindgen<'a, 'b> {
                         let c_typedef_target = self.interface.gen.get_c_ty(&Type::Id(*id)); // okay to unwrap because a record must have a name
                         uwriteln!(self.lower_src, "var {lower_name} {c_typedef_target}");
                         for field in r.fields.iter() {
-                            let c_field_name = &self.get_c_field_name(field);
                             let field_name = &self.interface.field_name(field);
 
                             self.lower_value(
                                 &format!("{param}.{field_name}"),
                                 &field.ty,
-                                &format!("{lower_name}_{c_field_name}"),
+                                &format!("{lower_name}_kind"),
                             );
                             uwriteln!(
                                 self.lower_src,
-                                "{lower_name}.{c_field_name} = {lower_name}_{c_field_name}"
+                                "{lower_name}.kind = {lower_name}_kind"
                             )
                         }
                     }
@@ -440,9 +439,8 @@ impl<'a, 'b> FunctionBindgen<'a, 'b> {
                         );
                         for field in r.fields.iter() {
                             let field_name = &self.interface.field_name(field);
-                            let c_field_name = &self.get_c_field_name(field);
                             self.lift_value(
-                                &format!("{param}.{c_field_name}"),
+                                &format!("{param}.kind"),
                                 &field.ty,
                                 &format!("{lift_name}_{field_name}"),
                             );
@@ -687,9 +685,5 @@ impl<'a, 'b> FunctionBindgen<'a, 'b> {
                 uwriteln!(self.lift_src, "{lift_name} = {target_name}({param})",);
             }
         }
-    }
-
-    pub(crate) fn get_c_field_name(&mut self, field: &Field) -> String {
-        field.name.to_snake_case()
     }
 }
