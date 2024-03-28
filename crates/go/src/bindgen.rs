@@ -690,6 +690,10 @@ impl<'a, 'b> FunctionBindgen<'a, 'b> {
     }
 
     pub(crate) fn get_c_field_name(&mut self, field: &Field) -> String {
-        field.name.to_snake_case()
+        if field.name == "type" {
+            return String::from("kind");
+        }
+
+        field.name.to_upper_camel_case()
     }
 }
