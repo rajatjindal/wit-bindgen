@@ -2,17 +2,23 @@ package foo:foo;
 
 interface foo-bar {
     record foo{
-        %type: string,
+        // %type: string,
         anything: string
     }
 
+    enum e2 {
+        // %type,
+        else
+    }
+
     record bar{
+        // %type: e2,
         anything: u16
     }
 
     fetch: func(x: foo) -> result<bar>;
 }
 
-world foo-bar-simple {
+world %type {
     import foo-bar;
 }
