@@ -440,9 +440,9 @@ impl<'a, 'b> FunctionBindgen<'a, 'b> {
                         );
                         for field in r.fields.iter() {
                             let field_name = &self.interface.field_name(field);
-                            let c_field_name = &self.get_c_field_name(field);
+                            let go_field_name = &self.get_go_field_name(field);
                             self.lift_value(
-                                &format!("{param}.{c_field_name}"),
+                                &format!("{param}.{go_field_name}"),
                                 &field.ty,
                                 &format!("{lift_name}_{field_name}"),
                             );
@@ -690,6 +690,10 @@ impl<'a, 'b> FunctionBindgen<'a, 'b> {
     }
 
     pub(crate) fn get_c_field_name(&mut self, field: &Field) -> String {
+        field.name.to_snake_case()
+    }
+
+    pub(crate) fn get_go_field_name(&mut self, field: &Field) -> String {
         if field.name == "type" {
             return String::from("kind");
         }
