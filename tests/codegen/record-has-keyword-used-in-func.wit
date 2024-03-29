@@ -6,14 +6,13 @@ interface foo-bar {
         anything: string
     }
 
-    enum bar{
-        anything,
-        %type
+    record bar{
+        anything: u16
     }
 
-    fetch: func(x: foo, e: bar) -> string;
+    fetch: func(x: foo) -> result<bar>;
 }
 
-world foo-world {
+world %type {
     import foo-bar;
 }
