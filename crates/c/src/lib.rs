@@ -3140,7 +3140,7 @@ pub fn is_arg_by_pointer(resolve: &Resolve, ty: &Type) -> bool {
 }
 
 pub fn to_c_ident(name: &str) -> String {
-   let escaped_name = match name {
+    let escaped_name = match name {
         // Escape C and C++ keywords.
         // Source: https://en.cppreference.com/w/cpp/keyword
         "alignas" => "alignas_".into(),
@@ -3253,7 +3253,7 @@ pub fn to_c_ident(name: &str) -> String {
     if GOKEYWORDS.contains(&escaped_name.as_str()) {
         return format!("{escaped_name}_");
     }
-    
+
     escaped_name.into()
 }
 
