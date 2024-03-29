@@ -9,4 +9,3 @@ world trait {
     return: func();
   }
 }
-
